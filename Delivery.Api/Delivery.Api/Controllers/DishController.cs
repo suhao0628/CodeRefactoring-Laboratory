@@ -2,7 +2,7 @@
 using Delivery.Api.Model;
 using Delivery.Api.Model.Dto;
 using Delivery.Api.Model.Enum;
-using Delivery.Api.Repository.Interfaces;
+using Delivery.Api.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +13,9 @@ namespace Delivery.Api.Controllers
     [ApiController]
     public class DishController : ControllerBase
     {
-        private readonly IDishRepository _dishRepository;
+        private readonly IDishService _dishRepository;
 
-        public DishController(IDishRepository dishRepository)
+        public DishController(IDishService dishRepository)
         {
             _dishRepository = dishRepository;
         }

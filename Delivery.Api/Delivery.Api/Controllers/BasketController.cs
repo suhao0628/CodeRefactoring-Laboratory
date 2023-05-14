@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Delivery.Api.Repository.Interfaces;
+using Delivery.Api.Service.Interfaces;
 using Delivery.Api.Model;
 
 namespace Delivery.Api.Controllers
@@ -11,8 +11,8 @@ namespace Delivery.Api.Controllers
     [ApiController]
     public class BasketController : ControllerBase
     {
-        private readonly IBasketRepository _basketRepository;
-        public BasketController(IBasketRepository basketRepository)
+        private readonly IBasketService _basketRepository;
+        public BasketController(IBasketService basketRepository)
         {
             _basketRepository = basketRepository;
         }

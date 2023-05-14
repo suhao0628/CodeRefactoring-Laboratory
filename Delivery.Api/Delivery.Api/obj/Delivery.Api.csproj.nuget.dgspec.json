@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\suhao\\source\\repos\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj": {}
+    "C:\\Users\\suhao\\Desktop\\CodeRefactoring-Laboratory\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\suhao\\source\\repos\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj": {
+    "C:\\Users\\suhao\\Desktop\\CodeRefactoring-Laboratory\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\suhao\\source\\repos\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj",
+        "projectUniqueName": "C:\\Users\\suhao\\Desktop\\CodeRefactoring-Laboratory\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj",
         "projectName": "Delivery.Api",
-        "projectPath": "C:\\Users\\suhao\\source\\repos\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj",
+        "projectPath": "C:\\Users\\suhao\\Desktop\\CodeRefactoring-Laboratory\\Delivery.Api\\Delivery.Api\\Delivery.Api.csproj",
         "packagesPath": "C:\\Users\\suhao\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\suhao\\source\\repos\\Delivery.Api\\Delivery.Api\\obj\\",
+        "outputPath": "C:\\Users\\suhao\\Desktop\\CodeRefactoring-Laboratory\\Delivery.Api\\Delivery.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\suhao\\AppData\\Roaming\\NuGet\\NuGet.Config",

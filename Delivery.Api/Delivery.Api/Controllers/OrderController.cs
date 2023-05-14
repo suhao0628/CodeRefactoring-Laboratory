@@ -3,7 +3,7 @@ using Delivery.Api.Model;
 using Delivery.Api.Model.Dto;
 using Delivery.Api.Model.Entity;
 using Delivery.Api.Model.Enum;
-using Delivery.Api.Repository.Interfaces;
+using Delivery.Api.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +16,9 @@ namespace Delivery.Api.Controllers
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class OrderController : ControllerBase
 	{
-        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderService _orderRepository;
 
-        public OrderController(IOrderRepository orderRepository)
+        public OrderController(IOrderService orderRepository)
 		{
 			_orderRepository = orderRepository;
 		}

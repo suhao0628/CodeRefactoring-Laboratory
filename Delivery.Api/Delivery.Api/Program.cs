@@ -2,7 +2,7 @@ using Delivery.Api;
 using Delivery.Api.Data;
 using Delivery.Api.Filters;
 using Delivery.Api.Repository;
-using Delivery.Api.Repository.Interfaces;
+using Delivery.Api.Service.Interfaces;
 using Delivery.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -25,11 +25,11 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddDistributedMemoryCache();
 //Repository
-builder.Services.AddScoped<IDishRepository, DishRepository>();
-builder.Services.AddScoped<IBasketRepository, BasketRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IJwtRepository, JwtRepository>();
+builder.Services.AddScoped<IDishService, DishService>();
+builder.Services.AddScoped<IBasketService, BasketService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 //Mapper
 builder.Services.AddAutoMapper(typeof(MappingConfig));

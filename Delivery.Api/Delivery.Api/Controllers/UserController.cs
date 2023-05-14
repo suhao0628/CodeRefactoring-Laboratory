@@ -3,7 +3,7 @@ using Delivery.Api.Data;
 using Delivery.Api.Exceptions;
 using Delivery.Api.Model;
 using Delivery.Api.Model.Dto;
-using Delivery.Api.Repository.Interfaces;
+using Delivery.Api.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -19,10 +19,10 @@ namespace Delivery.Api.Controllers
 	[ApiController]
 	public class UserController : ControllerBase
 	{
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userRepository;
         private readonly IDistributedCache _cache;
 
-        public UserController(IUserRepository userRepository,IDistributedCache cache)
+        public UserController(IUserService userRepository,IDistributedCache cache)
 		{
 			_userRepository = userRepository;
             _cache = cache;
