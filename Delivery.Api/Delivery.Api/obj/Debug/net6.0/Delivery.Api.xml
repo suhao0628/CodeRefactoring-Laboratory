@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Delivery.Api</name>
+    </assembly>
+    <members>
+        <member name="M:Delivery.Api.Controllers.BasketController.GetBasket">
+            <summary>
+            Get user cart
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.BasketController.AddBasket(System.Guid)">
+            <summary>
+            Add dish to cart
+            </summary>
+            <param name="dishId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.BasketController.DeleteBasket(System.Guid,System.Boolean)">
+            <summary>
+            Descrease the number of dishes in the cart (if increase=true),or remove the dish completely(increase=false)
+            </summary>
+            <param name="dishId"></param>
+            <param name="increase"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:Delivery.Api.Controllers.DishController.GetDish(Delivery.Api.Model.Enum.DishCategory[],System.Nullable{Delivery.Api.Model.Enum.DishSorting},System.Boolean,System.Int32)">
+            <summary>
+            Get a list of dishes(menu)
+            </summary>
+            <param name="categories"></param>
+            <param name="sorting"></param>
+            <param name="vegetarian"></param>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.DishController.GetDishDetails(System.Guid)">
+            <summary>
+            Get information about concrete dish
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.DishController.CheckRating(System.Guid)">
+            <summary>
+            Checks if user is able to set rating of the dish
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.DishController.SetRating(System.Guid,System.Int32)">
+            <summary>
+             Set a rating for a dish
+            </summary>
+            <param name="id"></param>
+            <param name="ratingScore"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.OrderController.GetOrderDetails(System.Guid)">
+            <summary>
+            Get information about concrete order
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.OrderController.GetOrders">
+            <summary>
+            Get a list of orders
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.OrderController.CreateOrder(Delivery.Api.Model.Dto.OrderCreateDto)">
+            <summary>
+            Creating the order from dishes in basket
+            </summary>
+            <param name="orderCreateDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.OrderController.ConfirmDelivery(System.Guid)">
+            <summary>
+            Confirm order delivery
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.UserController.Register(Delivery.Api.Model.UserRegisterModel)">
+            <summary>
+            Register new user
+            </summary>
+            <param name="register"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.UserController.Login(Delivery.Api.Model.LoginCredentials)">
+            <summary>
+            Log in to the system
+            </summary>
+            <param name="login"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.UserController.Logout">
+            <summary>
+            Log out system user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.UserController.GetProfile">
+            <summary>
+            Get user profile
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Delivery.Api.Controllers.UserController.EditProfile(Delivery.Api.Model.UserEditModel)">
+            <summary>
+            Edit user profile
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Delivery.Api.Migrations.Initialize">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Initialize.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Initialize.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Initialize.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Delivery.Api.Migrations.Amendment">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Amendment.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Amendment.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Amendment.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Delivery.Api.Migrations.Modification">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Modification.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Modification.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Modification.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Delivery.Api.Migrations.Initialize4">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Initialize4.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Initialize4.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.Initialize4.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Delivery.Api.Migrations.initialize5">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.initialize5.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.initialize5.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Delivery.Api.Migrations.initialize5.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
