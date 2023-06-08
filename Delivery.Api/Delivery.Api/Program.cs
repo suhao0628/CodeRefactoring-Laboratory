@@ -1,7 +1,7 @@
 using Delivery.Api;
 using Delivery.Api.Data;
 using Delivery.Api.Filters;
-using Delivery.Api.Repository;
+using Delivery.Api.Service;
 using Delivery.Api.Service.Interfaces;
 using Delivery.Api.Extensions;
 using Microsoft.EntityFrameworkCore;

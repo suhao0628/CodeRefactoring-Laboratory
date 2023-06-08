@@ -8,8 +8,9 @@ using Delivery.Api.Model.Enum;
 using Delivery.Api.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Runtime.InteropServices;
 
-namespace Delivery.Api.Repository
+namespace Delivery.Api.Service
 {
     public class DishService : IDishService
     {
@@ -22,7 +23,6 @@ namespace Delivery.Api.Repository
             _context = context;
             _mapper = mapper;
         }
-
         public async Task<DishPagedListDto> GetDish(DishCategory[]? category, DishSorting? sorting, bool vegetarian, int page)
         {
             IQueryable<Dish> dishQueryable =  _context.Dishes;
@@ -117,7 +117,7 @@ namespace Delivery.Api.Repository
 
             return await _context.Orders.FirstOrDefaultAsync(x => x.UserId == userId && x.Id == carts.OrderId) != null;
         }
-
+        
         public async Task SetRating(Guid id, int ratingScore, Guid userId)
         {
             var dish = await _context.Dishes.Where(d => d.Id == id).FirstOrDefaultAsync();

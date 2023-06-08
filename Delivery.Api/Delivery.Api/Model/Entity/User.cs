@@ -8,7 +8,7 @@ namespace Delivery.Api.Model.Entity
         [Key]
         public Guid Id { get; set; }
 
-        [Required]
+        //[Required]
         [MinLength(1)]
         public string FullName { get; set; }
 

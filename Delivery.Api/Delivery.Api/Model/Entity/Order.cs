@@ -27,8 +27,8 @@ namespace Delivery.Api.Model.Entity
         [Required]
         public int Price { get; set; }
 
-        [Required]
+        //[Required]
         [MinLength(1)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
     }
 }

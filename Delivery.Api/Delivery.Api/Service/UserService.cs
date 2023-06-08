@@ -54,7 +54,7 @@ namespace Delivery.Api.Service
         public async Task<TokenResponse> Login(LoginCredentials login)
         {
             var user = await _context.Users.Where(u => u.Email == login.Email).FirstOrDefaultAsync();
-
+            
             if (user == null)
             {
                 throw new BadRequestException();

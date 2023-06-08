@@ -6,16 +6,16 @@ using Delivery.Api.Model.Entity;
 using Delivery.Api.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Delivery.Api.Repository
+namespace Delivery.Api.Service
 {
     public class BasketService : IBasketService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        public BasketService(ApplicationDbContext context, IMapper mapper)
+        //private readonly IMapper _mapper;
+        public BasketService(ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
+            //_mapper = mapper;
         }
         public async Task<List<DishBasketDto>> GetBasket(Guid userId)
         {
