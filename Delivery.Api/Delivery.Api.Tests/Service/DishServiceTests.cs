@@ -31,8 +31,6 @@ namespace Delivery.Api.Tests.Service
                 cfg.CreateMap<Dish, DishDto>();
             });
             _mapper = config.CreateMapper();
-
-
         }
 
         #region  GetDish Tests
@@ -47,9 +45,9 @@ namespace Delivery.Api.Tests.Service
 
             var dishes = new List<Dish>
             {
-            new Dish { Id = Guid.NewGuid(), Name = "Dish 1", Category = DishCategory.Wok, Vegetarian = true },
-            new Dish { Id = Guid.NewGuid(), Name = "Dish 2", Category = DishCategory.Wok, Vegetarian = true },
-            new Dish { Id = Guid.NewGuid(), Name = "Dish 3", Category = DishCategory.Soup, Vegetarian = false }
+                new Dish { Id = Guid.NewGuid(), Name = "Dish 1", Category = DishCategory.Wok, Vegetarian = true },
+                new Dish { Id = Guid.NewGuid(), Name = "Dish 2", Category = DishCategory.Wok, Vegetarian = false },
+                new Dish { Id = Guid.NewGuid(), Name = "Dish 3", Category = DishCategory.Soup, Vegetarian = true }
             };
 
             await _context
@@ -64,7 +62,7 @@ namespace Delivery.Api.Tests.Service
             // Assert
             result.Should().NotBeNull(); 
             result.Should().BeOfType<DishPagedListDto>();
-            //result.Dishes.Should().HaveCount(2);
+            result.Dishes.Should().HaveCount(1);
             result.Dishes.Should().OnlyContain(d => d.Category == DishCategory.Wok && d.Vegetarian);
         }
 
@@ -96,6 +94,40 @@ namespace Delivery.Api.Tests.Service
             await act.Should().ThrowAsync<NotFoundException>();
         }
 
+
+        [Fact]
+        public async Task GetDish_WithSorting_ShouldReturnSortedDishes()
+        {
+            // Arrange
+            var category = new DishCategory[] { DishCategory.Wok };
+            var sorting = DishSorting.PriceDesc;
+            var vegetarian = true;
+            var page = 1;
+
+            var dishes = new List<Dish>
+            {
+                new Dish { Id = Guid.NewGuid(), Name = "Dish 1", Category = DishCategory.Wok, Vegetarian = true, Price = 10 },
+                new Dish { Id = Guid.NewGuid(), Name = "Dish 2", Category = DishCategory.Wok, Vegetarian = true, Price = 20 },
+                new Dish { Id = Guid.NewGuid(), Name = "Dish 3", Category = DishCategory.Wok, Vegetarian = true, Price = 15 }
+            };
+
+            await _context.Dishes.AddRangeAsync(dishes);
+            await _context.SaveChangesAsync();
+
+            var repository = new DishService(_context, _mapper);
+
+            // Act
+            var result = await repository.GetDish(category, sorting, vegetarian, page);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Dishes.Should().HaveCount(3);
+            result.Dishes.Should().BeInDescendingOrder(d => d.Price);
+
+            var dish2 = result.Dishes.FirstOrDefault(d => d.Price == 20);
+            result.Dishes.IndexOf(dish2).Should().Be(0);
+        }
+
         [Fact]
         public async Task GetDish_WithValidPage_ShouldReturnPagedDishes()
         {
@@ -125,42 +157,13 @@ namespace Delivery.Api.Tests.Service
 
             // Assert
             result.Should().NotBeNull();
-            result.Dishes.Should().HaveCount(1); // Assuming PageSize is 5
+            result.Dishes.Should().HaveCount(1);
             result.Pagination.Should().NotBeNull();
-            result.Pagination.Size.Should().Be(5); // Assuming PageSize is 10
-            result.Pagination.Count.Should().Be(2); // Assuming there are 11 total dishes and PageSize is 10
+            result.Pagination.Size.Should().Be(5); // Assuming PageSize is 5
+            result.Pagination.Count.Should().Be(2); // Assuming there are 6 total dishes and PageSize is 5
             result.Pagination.Current.Should().Be(page);
         }
 
-        [Fact]
-        public async Task GetDish_WithSorting_ShouldReturnSortedDishes()
-        {
-            // Arrange
-            var category = new DishCategory[] { DishCategory.Wok };
-            var sorting = DishSorting.PriceDesc;
-            var vegetarian = true;
-            var page = 1;
-
-            var dishes = new List<Dish>
-            {
-                new Dish { Id = Guid.NewGuid(), Name = "Dish 1", Category = DishCategory.Wok, Vegetarian = true, Price = 10 },
-                new Dish { Id = Guid.NewGuid(), Name = "Dish 2", Category = DishCategory.Wok, Vegetarian = true, Price = 20 },
-                new Dish { Id = Guid.NewGuid(), Name = "Dish 3", Category = DishCategory.Wok, Vegetarian = true, Price = 15 }
-            };
-
-            await _context.Dishes.AddRangeAsync(dishes);
-            await _context.SaveChangesAsync();
-
-            var repository = new DishService(_context, _mapper);
-
-            // Act
-            var result = await repository.GetDish(category, sorting, vegetarian, page);
-
-            // Assert
-            result.Should().NotBeNull();
-            //result.Dishes.Should().HaveCount(3);
-            result.Dishes.Should().BeInDescendingOrder(d => d.Price);
-        }
         #endregion
 
         #region GetDishDetails Tests
@@ -198,7 +201,6 @@ namespace Delivery.Api.Tests.Service
 
             // Assert
             await act.Should().ThrowAsync<NotFoundException>();
-            
         }
         #endregion
 

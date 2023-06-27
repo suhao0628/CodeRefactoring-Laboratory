@@ -1,11 +1,6 @@
 ﻿using Delivery.Api.Model.Entity;
 using Delivery.Api.Model;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Delivery.Api.Data;
 using Delivery.Api.Service;
 using FluentAssertions;
@@ -52,12 +47,10 @@ namespace Delivery.Api.Tests.Service
                 Password = "password"
             };
 
-            // Create an in-memory database context using a unique database name
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            // Use the in-memory database context in the service
             using (var context = new ApplicationDbContext(options))
             {
                 // Add a test user to the in-memory database
@@ -68,7 +61,6 @@ namespace Delivery.Api.Tests.Service
 
                     Id = Guid.NewGuid(),
                     FullName = "SuHao",
-
                     Address = "Tomsk",
                     BirthDate = DateTime.Now.ToString(),
                     Gender = Gender.Male,
@@ -78,7 +70,7 @@ namespace Delivery.Api.Tests.Service
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
 
-                var jwtService = A.Fake<IJwtService>(); // Use FakeItEasy to create a fake IJwtService instance
+                var jwtService = A.Fake<IJwtService>();
                 var userService = new UserService(context, _mapper, jwtService);
 
                 var dummyToken = new JwtSecurityToken();
@@ -89,8 +81,9 @@ namespace Delivery.Api.Tests.Service
                 var result = await userService.Login(loginCredentials);
 
                 // Assert
-                result.Should().NotBeNull();
+                
                 result.Token.Should().NotBeNullOrEmpty();
+                result.Should().BeOfType<TokenResponse>();
             }
         }
 
