@@ -7,6 +7,7 @@ using Delivery.Api.Model.Entity;
 using Delivery.Api.Model.Enum;
 using Delivery.Api.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.Runtime.InteropServices;
 
@@ -16,7 +17,7 @@ namespace Delivery.Api.Service
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private const int PageSize = 5;
+        private const int PageSize = AppConfig.PageSize;
 
         public DishService(ApplicationDbContext context, IMapper mapper)
         {
@@ -25,41 +26,63 @@ namespace Delivery.Api.Service
         }
         public async Task<DishPagedListDto> GetDish(DishCategory[]? category, DishSorting? sorting, bool vegetarian, int page)
         {
-            IQueryable<Dish> dishQueryable =  _context.Dishes;
-            dishQueryable = dishQueryable.Where(d => d.Vegetarian == vegetarian);
+            IQueryable<Dish> dishQueryable = _context.Dishes;
+            dishQueryable = GetVegetarian(dishQueryable, vegetarian);
+            dishQueryable = GetCategory(dishQueryable, category);
+
+            int pageTotal = CalculatePageTotal(dishQueryable);
+            page = GetValidPage(page, pageTotal);
+            var dishes = await GetDishesForPage(dishQueryable, page);
+
+            dishes = Sort(dishes, sorting);
+
+            return GetDishPagedListDto(dishes, pageTotal, page);
+        }
+        private IQueryable<Dish> GetVegetarian(IQueryable<Dish> dishQueryable, bool vegetarian)
+        {
+            return dishQueryable.Where(d => d.Vegetarian == vegetarian);
+        }
+
+        private IQueryable<Dish> GetCategory(IQueryable<Dish> dishQueryable, DishCategory[]? category)
+        {
             if (category.IsNullOrEmpty())
             {
                 throw new NotFoundException();
             }
-            else {
-                dishQueryable = dishQueryable.Where(x => category != null && category.Contains(x.Category));
-            }
 
-            int dishCount = await dishQueryable.CountAsync();
+            return dishQueryable.Where(x => category != null && category.Contains(x.Category));
+        }
+        private int CalculatePageTotal(IQueryable<Dish> dishQueryable)
+        {
+            int dishCount = dishQueryable.Count();
             int pageTotal = (int)Math.Ceiling(dishCount / (double)PageSize);
+            if (pageTotal == 0)
+            {
+                pageTotal = 1;
+            }
+            return pageTotal;
+        }
 
+        private int GetValidPage(int page, int pageTotal)
+        {
             if (page < 1)
             {
                 page = 1;
             }
-            if (pageTotal == 0)
+            else if (page > pageTotal)
             {
-                pageTotal = 1;
-                page = 1;
+                page = pageTotal;
             }
-            else
-            {
-                if (page > pageTotal)
-                {
-                    page = pageTotal;
-                }
-            }
+            return page;
+        }
 
-            var dishes = 
-                await dishQueryable.Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
-
-            dishes = Sort(dishes, sorting);
-
+        private async Task<List<Dish>> GetDishesForPage(IQueryable<Dish> dishQueryable, int page)
+        {
+            var dishes = await dishQueryable.Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
+            return dishes;
+        }
+        private DishPagedListDto GetDishPagedListDto(List<Dish> dishes, int pageTotal, int page)
+        {
             PageInfoModel paginationModel = new()
             {
                 Size = PageSize,
@@ -74,7 +97,7 @@ namespace Delivery.Api.Service
             };
             return dishListDto;
         }
-        
+
         private static List<Dish> Sort(List<Dish> dishes, DishSorting? sorting)
         {
             switch (sorting)
