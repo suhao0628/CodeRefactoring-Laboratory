@@ -21,10 +21,10 @@ namespace Delivery.Api.Service
         {
             var baskets = await _context.Baskets
                 .Where(b => b.UserId == userId)
-                .Include(w => w.Dish)
+                .Select(b=>CreateDishBasketDto(b))
                 .ToListAsync();
 
-            return baskets.Select(CreateDishBasketDto).ToList();
+            return baskets;
         }
         private DishBasketDto CreateDishBasketDto(Basket basket)
         {
