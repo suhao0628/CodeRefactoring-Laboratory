@@ -10,8 +10,6 @@ namespace Delivery.Api
         public MappingConfig()
         {
             CreateMap<Dish, DishDto>().ReverseMap();
-
-            CreateMap<Cart,DishBasketDto>();
             
             CreateMap<OrderCreateDto, Order>();
 

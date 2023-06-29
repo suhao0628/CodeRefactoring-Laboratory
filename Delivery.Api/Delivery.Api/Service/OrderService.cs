@@ -23,22 +23,25 @@ namespace Delivery.Api.Service
 
         public async Task<OrderDto> GetOrderDetails(Guid orderId)
         {
-            var carts = await _context.Carts.Where(w => w.OrderId == orderId).Include(w => w.Order).ToListAsync();
-            if (!carts.Any())
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null)
             {
                 throw new NotFoundException();
             }
 
+            var baskets = await GetListBasket(order.UserId);
+
             OrderDto orderDto = new()
             {
-                Id = carts.FirstOrDefault().OrderId,
-                DeliveryTime = carts.FirstOrDefault().Order.DeliveryTime,
-                OrderTime = carts.FirstOrDefault().Order.OrderTime,
-                Status = carts.FirstOrDefault().Order.Status,
-                Price = carts.FirstOrDefault().Price,
-                Dishes = _mapper.Map<List<DishBasketDto>>(carts),
-                Address = carts.FirstOrDefault().Order.Address
+                Id = order.Id,
+                DeliveryTime = order.DeliveryTime,
+                OrderTime = order.OrderTime,
+                Status = order.Status,
+                Price = order.Price,
+                Dishes = _mapper.Map<List<DishBasketDto>>(baskets),
+                Address = order.Address
             };
+
             return orderDto;
         }
 
@@ -52,48 +55,30 @@ namespace Delivery.Api.Service
 
         public async Task CreateOrder(OrderCreateDto orderCreateDto, Guid userId)
         {
-            var baskets = await _context.Baskets.Where(b => b.UserId == userId).Include(b => b.Dish).ToListAsync();
-            if (baskets.Any())
+            var baskets = await GetListBasket(userId);
+
+
+            Order order = _mapper.Map<Order>(orderCreateDto);
+
+            int allTotalPrice = 0;
+
+            foreach (var basketItem in baskets)
             {
-                Order order = _mapper.Map<Order>(orderCreateDto);
-
-                int allTotalPrice = 0;
-
-                List<Cart> carts = new List<Cart>();
-
-                foreach (var basketItem in baskets)
-                {
-                    allTotalPrice += basketItem.Dish.Price * basketItem.Amount;
-
-                    //Migration of data from basket to cart
-                    Cart cart = new()
-                    {
-                        Id = Guid.NewGuid(),
-                        OrderId = order.Id,
-                        DishId = basketItem.Dish.Id,
-                        Name = basketItem.Dish.Name,
-                        Price = basketItem.Dish.Price,
-                        TotalPrice = basketItem.Dish.Price * basketItem.Amount,
-                        Amount = basketItem.Amount,
-                        Image = basketItem.Dish.Image
-                    };
-                    carts.Add(cart);
-                }
-
-                order.Price = allTotalPrice;
-                order.OrderTime = DateTime.Now;
-                order.Status = OrderStatus.InProcess;
-
-                await _context.AddRangeAsync(carts);
-                await _context.AddAsync(order);
-                //Delete basket
-                _context.RemoveRange(baskets);
-                await _context.SaveChangesAsync();
+                allTotalPrice += basketItem.Dish.Price * basketItem.Amount;
             }
-            else
+
+            order.Price = allTotalPrice;
+            order.OrderTime = DateTime.Now;
+            order.Status = OrderStatus.InProcess;
+
+            _context.Add(order);
+
+            foreach (var basketItem in baskets)
             {
-                throw new NotFoundException();
+                _context.Remove(basketItem);
             }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task ConfirmDelivery(Guid orderId, Guid userId)
@@ -112,6 +97,18 @@ namespace Delivery.Api.Service
             order.Status = OrderStatus.Delivered;
             _context.Update(order);
             await _context.SaveChangesAsync();
+        }
+        private async Task<List<Basket>> GetListBasket(Guid userId)
+        {
+            var baskets = await _context.Baskets.Where(b => b.UserId == userId)
+                .Include(b => b.Dish)
+                .ToListAsync();
+
+            if (!baskets.Any())
+            {
+                throw new NotFoundException();
+            }
+            return baskets;
         }
     }
 }
