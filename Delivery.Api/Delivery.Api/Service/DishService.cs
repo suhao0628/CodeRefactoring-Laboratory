@@ -24,7 +24,7 @@ namespace Delivery.Api.Service
             _context = context;
             _mapper = mapper;
         }
-        public async Task<DishPagedListDto> GetDish(DishCategory[]? category, DishSorting? sorting, bool vegetarian, int page)
+        public async Task<DishPagedListDto> GetDish(DishCategory? category, DishSorting? sorting, bool vegetarian, int page)
         {
             IQueryable<Dish> dishQueryable = _context.Dishes;
             dishQueryable = GetVegetarian(dishQueryable, vegetarian);
@@ -43,14 +43,14 @@ namespace Delivery.Api.Service
             return dishQueryable.Where(d => d.Vegetarian == vegetarian);
         }
 
-        private IQueryable<Dish> GetCategory(IQueryable<Dish> dishQueryable, DishCategory[]? category)
+        private IQueryable<Dish> GetCategory(IQueryable<Dish> dishQueryable, DishCategory? category)
         {
-            if (category.IsNullOrEmpty())
+            if (category==null)
             {
                 throw new NotFoundException();
             }
 
-            return dishQueryable.Where(x => category != null && category.Contains(x.Category));
+            return dishQueryable.Where(x => category != null && x.Category == category.Value);
         }
         private int CalculatePageTotal(IQueryable<Dish> dishQueryable)
         {
