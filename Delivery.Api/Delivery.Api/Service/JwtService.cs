@@ -10,7 +10,7 @@ namespace Delivery.Api.Service
 {
     public class JwtService : IJwtService
     {
-        public readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         public JwtService(IConfiguration configuration)
         {
             _configuration = configuration; 

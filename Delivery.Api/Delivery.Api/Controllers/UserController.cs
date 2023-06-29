@@ -70,17 +70,16 @@ namespace Delivery.Api.Controllers
         [HttpPost("logout")]
 		[AllowAnonymous]
         [ProducesResponseType(typeof(Response), 500)]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
 		{
             try
             {
-                //To do..
                 var auth = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 if (!string.IsNullOrWhiteSpace(auth) && auth.StartsWith("Bearer"))
                 {
                     var token = auth.Substring("Bearer".Length).Trim();
 
-                    _cache.SetStringAsync(token, "1", new DistributedCacheEntryOptions
+                    await _cache.SetStringAsync(token, "1", new DistributedCacheEntryOptions
                     {
                         AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60)
                     });

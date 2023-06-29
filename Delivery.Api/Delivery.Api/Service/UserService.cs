@@ -28,7 +28,8 @@ namespace Delivery.Api.Service
         }
         public async Task<TokenResponse> Register(UserRegisterModel register)
         {
-            if (await _context.Users.Where(x => register.Email == x.Email).FirstOrDefaultAsync() != null) {
+            if (await _context.Users.AnyAsync(x => x.Email == register.Email))
+            {
                 throw new BadRequestException();
             }
             User user = new()
@@ -53,13 +54,9 @@ namespace Delivery.Api.Service
         }
         public async Task<TokenResponse> Login(LoginCredentials login)
         {
-            var user = await _context.Users.Where(u => u.Email == login.Email).FirstOrDefaultAsync();
-            
-            if (user == null)
-            {
-                throw new BadRequestException();
-            }
-            if (user.Password != login.Password)
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == login.Email);
+
+            if (user == null || user.Password != login.Password)
             {
                 throw new BadRequestException();
             }
@@ -71,7 +68,7 @@ namespace Delivery.Api.Service
         
         public async Task<UserDto> GetProfile(Guid userId)
         {
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
@@ -82,7 +79,7 @@ namespace Delivery.Api.Service
 
         public async Task EditProfile(UserEditModel profile, Guid userId)
         {
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
